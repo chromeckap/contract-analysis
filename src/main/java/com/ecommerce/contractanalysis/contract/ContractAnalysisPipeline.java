@@ -1,7 +1,9 @@
 package com.ecommerce.contractanalysis.contract;
 
+import com.ecommerce.contractanalysis.step.ComplianceCheckStep;
 import com.ecommerce.contractanalysis.step.ReasoningStep;
 import com.ecommerce.contractanalysis.issue.Issues;
+import com.ecommerce.contractanalysis.utils.StepResult;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.Map;
 public class ContractAnalysisPipeline {
     private final List<ReasoningStep> steps = new ArrayList<>();
     private final Map<String, Object> context = new HashMap<>();
+    private final List<StepResult> executionHistory = new ArrayList<>();
     private final ChatClient.Builder chatClientBuilder;
 
     public ContractAnalysisPipeline(ChatClient.Builder chatClientBuilder) {
@@ -26,7 +29,43 @@ public class ContractAnalysisPipeline {
     }
 
     public Issues execute(String input) {
-        //todo add logic
-        return null;
+        String currentInput = input;
+        context.put("original_input", input);
+
+        Issues finalResult = null;
+
+        for (ReasoningStep step : steps) {
+            try {
+                StepResult result = step.execute(currentInput, context, chatClientBuilder);
+                executionHistory.add(result);
+
+                if (!result.success()) {
+                    break;
+                }
+
+                if (step instanceof ComplianceCheckStep) {
+                    finalResult = (Issues) context.get("compliance_issues");
+                }
+
+                currentInput = result.output();
+
+            } catch (Exception e) {
+                executionHistory.add(new StepResult(
+                        step.getName(), currentInput, "", e.getMessage(), false
+                ));
+                break;
+            }
+        }
+
+        return finalResult != null ? finalResult : createEmptyIssues();
+    }
+
+
+    private Issues createEmptyIssues() {
+        return new Issues(List.of());
+    }
+
+    public List<StepResult> getExecutionHistory() {
+        return executionHistory;
     }
 }
