@@ -1,6 +1,7 @@
 package com.ecommerce.contractanalysis.contract;
 
 import com.ecommerce.contractanalysis.step.ComplianceCheckStep;
+import com.ecommerce.contractanalysis.step.ContextKey;
 import com.ecommerce.contractanalysis.step.ReasoningStep;
 import com.ecommerce.contractanalysis.issue.Issues;
 import com.ecommerce.contractanalysis.utils.StepResult;
@@ -15,7 +16,7 @@ import java.util.Map;
 @Service
 public class ContractAnalysisPipeline {
     private final List<ReasoningStep> steps = new ArrayList<>();
-    private final Map<String, Object> context = new HashMap<>();
+    private final Map<ContextKey, Object> context = new HashMap<>();
     private final List<StepResult> executionHistory = new ArrayList<>();
     private final ChatClient.Builder chatClientBuilder;
 
@@ -30,7 +31,7 @@ public class ContractAnalysisPipeline {
 
     public Issues execute(String input) {
         String currentInput = input;
-        context.put("original_input", input);
+        context.put(ContextKey.ORIGINAL_INPUT, input);
 
         Issues finalResult = null;
 
@@ -44,7 +45,7 @@ public class ContractAnalysisPipeline {
                 }
 
                 if (step instanceof ComplianceCheckStep) {
-                    finalResult = (Issues) context.get("compliance_issues");
+                    finalResult = (Issues) context.get(ContextKey.COMPLIANCE_ISSUES);
                 }
 
                 currentInput = result.output();

@@ -16,9 +16,9 @@ public class LawRetrievalStep extends ReasoningStep {
     }
 
     @Override
-    public StepResult execute(String input, Map<String, Object> context, ChatClient.Builder baseChatClient) {
+    public StepResult execute(String input, Map<ContextKey, Object> context, ChatClient.Builder baseChatClient) {
         try {
-            String contractAnalysis = (String) context.get("contract_analysis");
+            String contractAnalysis = (String) context.get(ContextKey.CONTRACT_ANALYSIS);
 
             ChatClient ragChatClient = baseChatClient
                     .defaultAdvisors(new QuestionAnswerAdvisor(vectorStore))
@@ -55,7 +55,7 @@ public class LawRetrievalStep extends ReasoningStep {
                     .call()
                     .content();
 
-            context.put("legal_context", response);
+            context.put(ContextKey.LEGAL_CONTEXT, response);
 
             return new StepResult(name, contractAnalysis, response,
                     "Legal information retrieved successfully", true);

@@ -7,16 +7,17 @@ import org.springframework.ai.chat.client.ChatClient;
 import java.util.Map;
 
 public class ComplianceCheckStep extends ReasoningStep {
+
     public ComplianceCheckStep() {
         super("Compliance Check", "Check contract compliance and generate issues");
     }
 
     @Override
-    public StepResult execute(String input, Map<String, Object> context, ChatClient.Builder chatClient) {
+    public StepResult execute(String input, Map<ContextKey, Object> context, ChatClient.Builder chatClient) {
         try {
-            String contractAnalysis = (String) context.get("contract_analysis");
-            String legalContext = (String) context.get("legal_context");
-            String originalContract = (String) context.get("original_contract");
+            String contractAnalysis = (String) context.get(ContextKey.CONTRACT_ANALYSIS);
+            String legalContext = (String) context.get(ContextKey.LEGAL_CONTEXT);
+            String originalContract = (String) context.get(ContextKey.ORIGINAL_CONTRACT);
 
             String systemPrompt = """
                 Jste profesionální právník specializovaný na kontrolu souladu smluv.
@@ -64,7 +65,7 @@ public class ComplianceCheckStep extends ReasoningStep {
                     .call()
                     .entity(Issues.class);
 
-            context.put("compliance_issues", issues);
+            context.put(ContextKey.COMPLIANCE_ISSUES, issues);
 
             assert issues != null;
             return new StepResult(name, input, issues.toString(),
