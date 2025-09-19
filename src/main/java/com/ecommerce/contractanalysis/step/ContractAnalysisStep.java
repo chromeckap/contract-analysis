@@ -12,7 +12,7 @@ public class ContractAnalysisStep extends ReasoningStep {
     }
 
     @Override
-    public StepResult execute(String input, Map<String, Object> context, ChatClient.Builder chatClient) {
+    public StepResult execute(String input, Map<ContextKey, Object> context, ChatClient.Builder chatClient) {
         try {
             String systemPrompt = """
                 Jste profesionální analytik smluv. Vaším úkolem je analyzovat poskytnutý text smlouvy a vyextrahovat:
@@ -39,8 +39,8 @@ public class ContractAnalysisStep extends ReasoningStep {
                     .call()
                     .content();
 
-            context.put("contract_analysis", response);
-            context.put("original_contract", input);
+            context.put(ContextKey.CONTRACT_ANALYSIS, response);
+            context.put(ContextKey.ORIGINAL_CONTRACT, input);
 
             return new StepResult(name, input, response, "Contract analysis completed successfully", true);
 

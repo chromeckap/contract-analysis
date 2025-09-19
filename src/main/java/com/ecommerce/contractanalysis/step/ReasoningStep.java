@@ -14,7 +14,7 @@ public abstract class ReasoningStep {
         this.description = description;
     }
 
-    public abstract StepResult execute(String input, Map<String, Object> context, ChatClient.Builder chatClient);
+    public abstract StepResult execute(String input, Map<ContextKey, Object> context, ChatClient.Builder chatClient);
 
     public String getName() {
         return name;
