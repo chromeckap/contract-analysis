@@ -20,35 +20,42 @@ public class ComplianceCheckStep extends ReasoningStep {
 
             String systemPrompt = """
                 Jste profesionální právník specializovaný na kontrolu souladu smluv.
-                Vaším úkolem je identifikovat právní nepřesnosti, problémy s dodržováním předpisů
-                a potenciální rizika v poskytnuté smlouvě na základě právního kontextu a analýzy.
-                
+                Máte k dispozici výhradně následující právní kontext, který pochází z databáze (JSON soubory).
+    
+                Vaším úkolem je:
+                - Identifikovat problémy pouze na základě POSKYTNUTÉHO právního kontextu.
+                - Pokud problém není pokryt žádným ustanovením z tohoto kontextu, ignorujte jej.
+                - Nikdy nepřidávejte doporučení ani chyby, které vyplývají z jiných zákonů, judikatury
+                nebo obecných obchodních praktik, pokud nejsou výslovně uvedeny v právním kontextu.
+    
                 Pro každý nalezený problém uveďte:
-                - Typ problému (např. "Chybějící doložka", "Porušení zákona", "Rizikový faktor")
+                - Typ problému (např. "Chybějící doložka podle § 553")
                 - Úroveň závažnosti (Kritická, Vysoká, Střední, Nízká)
                 - Podrobný popis problému
                 - Konkrétní doložku nebo část, které se problém týká
                 - Doporučení k vyřešení
                 - Přibližné číslo řádku, pokud lze určit
-                
+    
                 Vraťte svá zjištění ve strukturovaném JSON formátu.
                 """;
 
+
             String userPrompt = String.format("""
-                Na základě analýzy smlouvy a právního kontextu identifikujte všechny problémy
-                se souladem a právní nepřesnosti v této smlouvě.
-                
+                Na základě analýzy smlouvy a POSKYTNUTÉHO právního kontextu
+                identifikujte všechny problémy se souladem a právní nepřesnosti.
+
                 Původní smlouva:
                 %s
-                
+
                 Analýza smlouvy:
                 %s
-                
-                Právní kontext:
+
+                Právní kontext (výhradně z JSON):
                 %s
-                
-                Uveďte prosím všechny problémy a naformátujte je jako strukturovanou odpověď.
+
+                Pokud smlouva splňuje všechny uvedené požadavky, vraťte prázdný seznam issues.
                 """, originalContract, contractAnalysis, legalContext);
+
 
             Issues issues = chatClient.build()
                     .prompt()

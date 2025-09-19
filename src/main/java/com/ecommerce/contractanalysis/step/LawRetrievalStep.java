@@ -25,24 +25,26 @@ public class LawRetrievalStep extends ReasoningStep {
                     .build();
 
             String systemPrompt = """
-                Jste právní expert s přístupem k rozsáhlé právní databázi.
-                Na základě poskytnuté analýzy smlouvy identifikujte relevantní právní ustanovení,
-                předpisy a judikaturu vztahující se k tomuto typu smlouvy.
+                Jste právní expert. Máte k dispozici POUZE níže uvedené právní předpisy,
+                které jsou definované v poskytnuté databázi (JSON soubory).
                 
-                Zaměřte se na:
-                1. Použitelné zákony a předpisy
-                2. Běžné právní požadavky pro tento typ smlouvy
-                3. Potenciální problémy s dodržováním předpisů
-                4. Osvědčené právní postupy
+                Neodkazujte na žádné jiné zákony, paragrafy, judikaturu ani zdroje,
+                které nejsou výslovně součástí tohoto seznamu
+                
+                Vaším úkolem je:
+                1. Na základě analýzy smlouvy vyhledat relevantní ustanovení
+                2. Vysvětlit, proč jsou tato ustanovení aplikovatelná
+                3. Nepřidávat žádné další právní předpisy mimo tento seznam
                 """;
 
             String userPrompt = """
-                Na základě této analýzy smlouvy, která právní ustanovení a předpisy jsou relevantní?
+                Na základě této analýzy smlouvy určete, která ustanovení
+                z POSKYTNUTÉHO seznamu právních předpisů jsou relevantní.
                 
                 Analýza smlouvy:
                 """ + contractAnalysis + """
                 
-                Uveďte prosím relevantní právní kontext a požadavky, které budou použity pro kontrolu souladu.
+                Pokud žádné ustanovení neodpovídá, uveďte "Žádné ustanovení z poskytnutého seznamu se nevztahuje".
                 """;
 
 
