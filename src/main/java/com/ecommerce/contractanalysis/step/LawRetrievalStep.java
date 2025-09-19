@@ -58,11 +58,11 @@ public class LawRetrievalStep extends ReasoningStep {
             context.put(ContextKey.LEGAL_CONTEXT, response);
 
             return new StepResult(name, contractAnalysis, response,
-                    "Legal information retrieved successfully", true);
+                    "Právní informace byly úspěšně získány", true);
 
         } catch (Exception e) {
             return new StepResult(name, input, "",
-                    "Error during legal information retrieval: " + e.getMessage(), false);
+                    "Chyba při získávání právních informací: " + e.getMessage(), false);
         }
     }
 }
