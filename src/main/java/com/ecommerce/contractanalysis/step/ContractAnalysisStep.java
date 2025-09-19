@@ -42,11 +42,11 @@ public class ContractAnalysisStep extends ReasoningStep {
             context.put(ContextKey.CONTRACT_ANALYSIS, response);
             context.put(ContextKey.ORIGINAL_CONTRACT, input);
 
-            return new StepResult(name, input, response, "Contract analysis completed successfully", true);
+            return new StepResult(name, input, response, "Analýza smlouvy dokončena úspěšně", true);
 
         } catch (Exception e) {
             return new StepResult(name, input, "",
-                    "Error during contract analysis: " + e.getMessage(), false);
+                    "Chyba při analýze smlouvy: " + e.getMessage(), false);
         }
     }
 }

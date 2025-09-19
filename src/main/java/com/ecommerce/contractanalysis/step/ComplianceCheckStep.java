@@ -69,11 +69,11 @@ public class ComplianceCheckStep extends ReasoningStep {
 
             assert issues != null;
             return new StepResult(name, input, issues.toString(),
-                    "Compliance check completed successfully", true);
+                    "Kontrola shody dokončena úspěšně", true);
 
         } catch (Exception e) {
             return new StepResult(name, input, "",
-                    "Error during compliance check: " + e.getMessage(), false);
+                    "Chyba při kontrole shody: " + e.getMessage(), false);
         }
     }
 }
