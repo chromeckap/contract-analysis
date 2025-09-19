@@ -19,8 +19,11 @@ import java.util.List;
 @Configuration
 public class RagConfiguration {
 
-    @Value("vectorstore.json")
+    @Value("${vector.store.name:vectorstore.json}")
     private String vectorStoreName;
+
+    @Value("${vector.store.path:/app/data}")
+    private String vectorStorePath;
 
     @Value("classpath:/data/laws/*.json")
     private Resource[] laws;
@@ -52,8 +55,7 @@ public class RagConfiguration {
     }
 
     private File getVectorStoreFile() {
-        Path path = Paths.get("src", "main", "resources", "data");
-        String absolutePath = path.toFile().getAbsolutePath() + "/" + vectorStoreName;
-        return new File(absolutePath);
+        Path path = Paths.get(vectorStorePath, vectorStoreName);
+        return path.toFile();
     }
 }
