@@ -20,7 +20,7 @@ OPEN_AI_API_KEY=value
 │                    └── example_laws2.json
 ```
 
-* Zákony v json souborech **musí** být definovány takto:
+* Zákony v json souborech mohou být definovány libovolně (příklad):
 
 ```json
 [
@@ -81,6 +81,7 @@ Po úspěšném spuštění aplikace bude API dostupné na adrese http://localho
 
 ## Usage
 1. Spusťte projekt podle instrukcí v sekci Deployment.
+2. Přidejte OpenAI key podle instrukcí v sekci Environment Variables.
 2. Použijte nástroj (např. Postman) pro odeslání souboru na endpoint http://localhost:8080/api/v1/contracts/analyze.
 3. Získejte strukturovanou analýzu smlouvy.
 
